@@ -6,6 +6,7 @@ $(function () {
             {label: '表名', name: 'tableName', width: 100, key: true},
             {label: 'Engine', name: 'engine', width: 70},
             {label: '表备注', name: 'tableComment', width: 100},
+            {label: '数据库', name: 'tableSchema', width: 100},
             {label: '创建时间', name: 'createTime', width: 100}
         ],
         viewrecords: true,
