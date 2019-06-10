@@ -1,0 +1,29 @@
+package ${mainPath}.service.${moduleName};
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${package}.entity.${moduleName}.${className};
+import ${package}.request.${moduleName}.${className}Request;
+
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${className}Service extends IService<${className}> {
+
+
+    /**
+     * 列表查询
+     *
+     * @param query 查询参数
+     * @param page  页数
+     * @param size  每页个数
+     * @return
+     */
+    IPage<${className}> list(${className}Request query, Integer page, Integer size);
+}
+

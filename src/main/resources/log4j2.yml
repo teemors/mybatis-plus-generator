@@ -1,0 +1,66 @@
+Configuration:
+  status: warn
+
+  Properties: # 定义变量
+    Property:
+      - name: log.path
+        value: zlog/generator
+
+  Appenders:
+    Console:  #输出到控制台
+      name: CONSOLE
+      target: SYSTEM_OUT
+      ThresholdFilter:
+        level: trace
+        onMatch: ACCEPT
+        onMismatch: DENY
+      PatternLayout:
+        pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+
+    # 输出到文件，超过10MB归档
+    RollingFile:
+      - name: ROLLING_FILE
+        ignoreExceptions: false
+        fileName: ${log.path}/out.log
+        filePattern: "${log.path}/${date:yyyy-MM}/out-%d{yyyy-MM-dd}-%i.log.gz"
+        PatternLayout:
+          pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: "20MB"
+        DefaultRolloverStrategy:
+          max: 10000
+
+
+      - name: ROLLING_ERROR_FILE
+        ThresholdFilter:
+              level: ERROR
+        gnoreExceptions: false
+        fileName: ${log.path}/error.log
+        filePattern: "${log.path}/${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz"
+        PatternLayout:
+          pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+              size: "20MB"
+        DefaultRolloverStrategy:
+          max: 10000
+#ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF。
+  Loggers:
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: CONSOLE
+        - ref: ROLLING_FILE
+        - ref: ROLLING_ERROR_FILE
+    Logger:
+      - name: com.htwz
+        additivity: false
+        level: DEBUG # 开发使用 DEBUG  生产环境 INFO
+        AppenderRef :
+          - ref: CONSOLE
+          - ref: ROLLING_FILE
+          - ref: ROLLING_ERROR_FILE
+
+
+

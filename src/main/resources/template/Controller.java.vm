@@ -1,0 +1,113 @@
+package ${mainPath}.controller.${moduleName};
+
+import java.util.Arrays;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.swagger.annotations.Api;
+import com.swagger.annotations.ApiOperation;
+import com.swagger.annotations.ApiParam;
+import com.htwz.core.bean.*;
+import ${package}.entity.${moduleName}.${className};
+import ${mainPath}.service.${moduleName}.${className}Service;
+import ${package}.request.${moduleName}.${className}Request;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@RestController
+@RequestMapping("${moduleName}/${pathName}")
+@Api(tags = "${comments}")
+public class ${className}Controller {
+
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+
+    /**
+     * 列表
+     *
+     * @param query 查询条件
+     * @return
+     */
+    @ApiOperation("获取列表")
+    @GetMapping("/list")
+    public RPage<${className}> list(
+            @ModelAttribute ${className}Request query,
+            @RequestParam(defaultValue = "1") @ApiParam("页数") Integer page,
+            @RequestParam(defaultValue = "15") @ApiParam("每页个数") Integer size
+    ) {
+
+        IPage<${className}> list = ${classname}Service.list(query, page, size);
+
+        return new RPage<>(list);
+    }
+
+
+    /**
+     * 详情
+     *
+     * @param ${pk.attrname} 主键
+     * @return
+     */
+    @ApiOperation("详情")
+    @GetMapping("/info/{${pk.attrname}}")
+    public R<${className}> info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
+        ${className} ${classname} =${classname}Service.getById(${pk.attrname});
+
+        return new R<${className}>().data(${classname});
+    }
+
+
+    /**
+     * 保存
+     *
+     * @param ${classname} 实体
+     * @return
+     */
+    @ApiOperation("保存")
+    @PostMapping("/save")
+    public R save(@RequestBody ${className} ${classname}) {
+
+            ${classname}Service.save(${classname});
+
+        return new R().msg("保存成功");
+    }
+
+
+    /**
+     * 修改
+     *
+     * @param ${classname} 实体
+     * @return
+     */
+    @ApiOperation("修改")
+    @PostMapping("/update")
+    public R update(@RequestBody ${className} ${classname}) {
+
+            ${classname}Service.updateById(${classname});//全部更新
+        
+        return new R().msg("保存成功");
+    }
+
+
+    /**
+     * 批量删除
+     *
+     * @param ${pk.attrname}s
+     * @return
+     */
+    @ApiOperation("批量删除")
+    @PostMapping("/delete")
+    public R delete(${pk.attrType}[]${pk.attrname}s) {
+            ${classname}Service.removeByIds(Arrays.asList(${pk.attrname}s));
+
+        return new R().msg("删除成功");
+    }
+
+}

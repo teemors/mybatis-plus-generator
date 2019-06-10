@@ -1,0 +1,29 @@
+package ${package}.request.${moduleName};
+
+import com.swagger.annotations.ApiModel;
+import com.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+
+
+/**
+ * ${comments}
+ * 列表查询请求参数
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+@Data
+@ApiModel
+public class ${className}Request{
+
+    #foreach ($column in $columns)
+        #if($column.attrType == "String")
+
+    @ApiModelProperty("$column.comments")
+    private $column.attrType $column.attrname;
+        #end
+    #end
+
+}
