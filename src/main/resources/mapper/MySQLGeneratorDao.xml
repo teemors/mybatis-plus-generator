@@ -3,7 +3,7 @@
 
 <mapper namespace="com.htwz.dao.MySQLGeneratorDao">
     <select id="queryList" resultType="map">
-        select table_name tableName, engine, table_comment tableComment, create_time createTime ,TABLE_SCHEMA tableSchema from
+        SELECT table_name tableName, engine, table_comment tableComment, create_time createTime ,TABLE_SCHEMA tableSchema from
         information_schema.tables
 
         <choose>
