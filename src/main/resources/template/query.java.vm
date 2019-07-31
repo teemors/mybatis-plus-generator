@@ -1,7 +1,6 @@
 package ${package}.request.${moduleName};
 
-import com.swagger.annotations.ApiModel;
-import com.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.*;
 import lombok.Data;
 
 

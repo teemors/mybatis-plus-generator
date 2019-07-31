@@ -22,7 +22,7 @@
     </select>
 
     <select id="queryTable" resultType="map">
-		select table_name tableName, engine, table_comment tableComment, create_time createTime from tables
+		select table_name tableName, engine, table_comment tableComment, create_time createTime from information_schema.tables
         <choose>
             <when test="databaseName != null and databaseName.trim() != ''">
                 where table_schema = #{databaseName}
@@ -35,7 +35,7 @@
 	</select>
 
     <select id="queryColumns" resultType="map">
-		select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from columns
+		select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from information_schema.columns
  			where table_name = #{tableName}
         <choose>
             <when test="databaseName != null and databaseName.trim() != ''">
