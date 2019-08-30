@@ -50,13 +50,23 @@ public class SysGeneratorController {
             String databaseName
     
     ) throws IOException {
-        
-        byte[] data = sysGeneratorService.generatorCode(tables.split(","), modelName, databaseName);
+        byte[] data = sysGeneratorService.generatorCode(tables.split(","), modelName, correctDataBaseName(databaseName));
         
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"code.zip\"");
         response.addHeader("Content-Length", "" + data.length);
         response.setContentType("application/octet-stream; charset=UTF-8");
+        
         IOUtils.write(data, response.getOutputStream());
+    }
+
+    private String correctDataBaseName(String dataBaseName){
+        if (dataBaseName == null){
+            return null;
+        }
+        if ("null".equals(dataBaseName)){
+            return null;
+        }
+        return dataBaseName;
     }
 }
