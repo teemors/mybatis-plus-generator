@@ -155,6 +155,13 @@ public class GenUtils {
      * 表名转换成Java类名
      */
     public static String tableToJava(String tableName, String tablePrefix) {
+        boolean removeProfix = getConfig().getBoolean("removePrefix");
+       
+    
+        if (removeProfix) {
+            int indexFirstLine = tableName.indexOf("_");
+            tableName = tableName.substring(indexFirstLine);
+        }
         if (StringUtils.isNotBlank(tablePrefix)) {
             tableName = tableName.replaceFirst(tablePrefix, "");
         }
