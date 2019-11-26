@@ -2,7 +2,7 @@ package ${package}.entity.${moduleName};
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.hydl.datasource.entity.Entity;
+import com.htwz.datasource.entity.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
