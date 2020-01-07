@@ -1,7 +1,27 @@
 **项目说明** 
+- 项目基于springboot2.0.6 可以作为项目的子模块，也可以单独部署
 - generator是项目的代码生成器，可在线生成entity、xml、dao、service，controller 减少开发任务
+**配置说明** 
+-generator.properties
+```
+  mainPath=com.teemor
+  #models的包名
+  package=com.teemor.models
+  #默认作者
+  author=
+  #默认Email
+  email=
+  #是否去除表名的前缀 tb_hotel 映射结果为Hotel HotelService
+  removePrefix=true
+  tablePrefix=tb_
+  #不需要生成的实体字段（继承自公共实体类）,只能用断线连接
+  excludeTableFiled=id-deleted
+  #java 和mysql 类型的映射关系
+  tinyint=Integer
+  ......
+```
 
-
+  
  **本地部署**
 - 通过git下载源码
 - 修改application.yml，更新MySQL账号和密码、数据库名称
