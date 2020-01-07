@@ -1,8 +1,51 @@
 **项目说明** 
 - 项目基于springboot2.0.6 可以作为项目的子模块，也可以单独部署
 - generator是项目的代码生成器，可在线生成entity、xml、dao、service，controller 减少开发任务
+
 **配置说明** 
--generator.properties
+
+- Entity 类为整合mybatis-plus后的自定义公共实体
+```java
+
+/**
+ * mybatis-plus 基础实体
+ *
+ * @author lujing
+ * @date 2018/7/25
+ */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode
+public class Entity<T extends Model<?>> extends Model<T> implements Serializable {
+    
+    private static final long serialVersionUID = 739668778715426460L;
+    
+    
+    @TableId(value = "id", type = IdType.ID_WORKER)
+    @ApiModelProperty("主键")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+    
+    
+    @TableLogic
+    @ApiModelProperty("是否删除")
+    private Boolean deleted;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Entity<?> entity = (Entity<?>) o;
+        return entity.getId().equals(this.id);
+    }
+}
+
+```
+- generator.properties
 ```
   mainPath=com.teemor
   #models的包名
