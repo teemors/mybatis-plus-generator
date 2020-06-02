@@ -65,7 +65,15 @@ var vm = new Vue({
                 return;
             }
 
-            location.href = "sys/generator/code?tables=" + tableNames.join() + "&modelName=" + vm.q.modelName + "&databaseName=" + vm.q.databaseName;
+            var url = "sys/generator/code?tables=" + tableNames.join() + "&modelName=" + vm.q.modelName + "&databaseName=" + vm.q.databaseName;
+            $.ajax({
+                url: url,
+                success:function(result){
+                    alert(result.tables + ' 代码模板生成成功');
+                }
+
+            });
+
         }
     }
 });

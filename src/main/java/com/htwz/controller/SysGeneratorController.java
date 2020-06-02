@@ -2,6 +2,7 @@
 
 package com.htwz.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.htwz.service.SysGeneratorService;
 import com.htwz.utils.PageUtils;
 import com.htwz.utils.Query;
@@ -51,7 +52,12 @@ public class SysGeneratorController {
     
     ) throws IOException {
         byte[] data = sysGeneratorService.generatorCode(tables.split(","), modelName, correctDataBaseName(databaseName));
-        
+        if(data.length ==0){
+            response.setContentType("application/json; charset=UTF-8");
+            R r = R.ok().put("tables", tables);
+            IOUtils.write(JSONObject.toJSONBytes(r), response.getOutputStream());
+            return;
+        }
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"code.zip\"");
         response.addHeader("Content-Length", "" + data.length);

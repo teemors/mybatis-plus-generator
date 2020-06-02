@@ -13,6 +13,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
@@ -122,7 +123,8 @@ public class GenUtils {
         map.put("email", config.getString("email"));
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
         VelocityContext context = new VelocityContext(map);
-        
+    
+        Integer outFileType = config.getInt("outFileType");
         //获取模板列表
         List<String> templates = getTemplates();
         for (String template : templates) {
@@ -130,16 +132,42 @@ public class GenUtils {
             StringWriter sw = new StringWriter();
             Template tpl = Velocity.getTemplate(template, "UTF-8");
             tpl.merge(context, sw);
-            
-            try {
-                //添加到zip
-                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("mainPath"), modelName)));
-                IOUtils.write(sw.toString(), zip, "UTF-8");
-                IOUtils.closeQuietly(sw);
-                zip.closeEntry();
-            } catch (IOException e) {
-                throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
-            }
+           if(outFileType == 1){
+               outFileToTarget(modelName, config, tableEntity, template, sw);
+               
+           }else {
+               downloadFile(zip, modelName, config, tableEntity, template, sw);
+           }
+           
+        }
+    }
+    
+    private static void outFileToTarget(String modelName, Configuration config, TableEntity tableEntity, String template, StringWriter sw) {
+        String filePath = getFileName(template, tableEntity.getClassName(), config.getString("package"), modelName);
+        
+        File file = createFile(filePath);
+        
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(sw.toString().getBytes());
+            fileOutputStream.close();
+            System.out.println("模板" + template + "解析成功 ，代码位置：" + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("模板 [ " + template + " ] 解析错误");
+        }
+    }
+    
+    private static void downloadFile(ZipOutputStream zip, String modelName, Configuration config, TableEntity tableEntity, String template, StringWriter sw) {
+        try {
+            //添加到zip
+            zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("mainPath"), modelName)));
+            IOUtils.write(sw.toString(), zip, "UTF-8");
+            IOUtils.closeQuietly(sw);
+            zip.closeEntry();
+        } catch (IOException e) {
+            throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
         }
     }
     
@@ -183,7 +211,17 @@ public class GenUtils {
      * 获取文件名
      */
     public static String getFileName(String template, String className, String packageName, String moduleName) {
-        String packagePath = "main" + File.separator + "java" + File.separator;
+        String packagePath;
+        Integer outFileType = getConfig().getInt("outFileType");
+        if(outFileType == 1 ){
+            String outPath = getConfig().getString("outPath");
+            packagePath  = outPath + File.separator + "out" +  File.separator;
+        }else {
+             packagePath = "main" + File.separator + "java" + File.separator;
+        }
+    
+        
+        
         if (StringUtils.isNotBlank(packageName)) {
             packagePath += packageName.replace(".", File.separator) + File.separator;
         }
@@ -221,4 +259,31 @@ public class GenUtils {
         
         return null;
     }
+    
+    
+    /**
+     * 创建多级目录文件
+     *
+     * @param path 文件路径
+     * @throws IOException
+     */
+    private static File createFile(String path) {
+        if (StringUtils.isNotEmpty(path)) {
+            File file = new File(path);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            return file;
+        }
+        
+        return null;
+    }
+    
+    
 }

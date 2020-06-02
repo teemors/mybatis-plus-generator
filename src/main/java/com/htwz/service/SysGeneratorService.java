@@ -60,6 +60,9 @@ public class SysGeneratorService {
             //生成代码
             GenUtils.generatorCode(table, columns, zip, modelName);
         }
+        if(outputStream.size() == 0){
+            return new byte[0];
+        }
         IOUtils.closeQuietly(zip);
         return outputStream.toByteArray();
     }

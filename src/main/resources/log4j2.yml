@@ -35,7 +35,7 @@ Configuration:
       - name: ROLLING_ERROR_FILE
         ThresholdFilter:
               level: ERROR
-        gnoreExceptions: false
+        ignoreExceptions: false
         fileName: ${log.path}/error.log
         filePattern: "${log.path}/${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz"
         PatternLayout:
